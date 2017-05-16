@@ -26,6 +26,9 @@ class ofApp : public ofBaseApp{
 
 		ofxXmlSettings xmlPts;
 		ofPoint listPts[NUM_PTS];
+		int numberOfSavedFrames;
+		int numberOfSavedPoints;
+		ofMesh mesh;
 
 		
 };

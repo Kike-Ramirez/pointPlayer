@@ -3,39 +3,16 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+	numberOfSavedFrames = 0;
+	numberOfSavedPoints = 0;
+
 	//This is how you would load that very same file    
 	if (xmlPts.loadFile("kinectPoints_ella1.xml")) {
 		
 		xmlPts.pushTag("KinectPoints");
 		
-		int numberOfSavedFrames = xmlPts.getNumTags("frame");
+		numberOfSavedFrames = xmlPts.getNumTags("frame");
 		
-		for (int i = 0; i < numberOfSavedFrames; i++) {
-		
-			xmlPts.pushTag("frame", i);
-
-			int numberOfSavedPoints = xmlPts.getNumTags("newPoint");
-
-			for (int j = 0; j < numberOfSavedPoints; j++) {
-
-				xmlPts.pushTag("newPoint", j);
-
-				ofPoint p;
-				p.x = xmlPts.getValue("X", 0);
-				p.y = xmlPts.getValue("Y", 0);
-				p.z = xmlPts.getValue("Z", 0);
-
-				string colorPt;
-				colorPt = xmlPts.getValue("color", "000000");
-				xmlPts.popTag();
-
-			}
-
-			xmlPts.popTag();
-
-			// points.push_back(p);
-		}
-
 		xmlPts.popTag(); //pop position
 	}
 	else {
@@ -46,6 +23,43 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+	mesh.clear();
+
+	//for (int i = 0; i < numberOfSavedFrames; i++) {
+
+	int i = ofGetFrameNum();
+	cout << "Frame_" << i << endl;
+
+	xmlPts.pushTag("frame", i);
+
+	numberOfSavedPoints = xmlPts.getNumTags("newPoint");
+
+	for (int j = 0; j < numberOfSavedPoints; j++) {
+
+		xmlPts.pushTag("newPoint", j);
+
+		ofPoint p;
+		p.x = xmlPts.getValue("X", 0);
+		p.y = xmlPts.getValue("Y", 0);
+		p.z = xmlPts.getValue("Z", 0);
+
+		mesh.addVertex(p);
+
+		string colorPt;
+		colorPt = xmlPts.getValue("color", "000000");
+
+		ofColor colorVertex = ofColor(ofHexToInt(colorPt));
+		
+		mesh.addColor(colorVertex);
+
+		xmlPts.popTag();
+
+	}
+
+	xmlPts.popTag();
+
+	// points.push_back(p);
 
 }
 
