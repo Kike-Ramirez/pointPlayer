@@ -9,10 +9,14 @@ void ofApp::setup(){
 	//This is how you would load that very same file    
 	if (xmlPts.loadFile("kinectPoints_ella1.xml")) {
 		
+		cout << "Fichero abierto" << endl;
+
 		xmlPts.pushTag("KinectPoints");
 		
-		numberOfSavedFrames = xmlPts.getNumTags("frame");
+		numberOfSavedFrames = xmlPts.getNumTags("newFrame");
 		
+		cout << numberOfSavedFrames << endl;
+
 		xmlPts.popTag(); //pop position
 	}
 	else {
@@ -31,7 +35,9 @@ void ofApp::update(){
 	int i = ofGetFrameNum();
 	cout << "Frame_" << i << endl;
 
-	xmlPts.pushTag("frame", i);
+	xmlPts.pushTag("KinectPoints");
+
+	xmlPts.pushTag("newFrame", i);
 
 	numberOfSavedPoints = xmlPts.getNumTags("newPoint");
 
@@ -58,13 +64,21 @@ void ofApp::update(){
 	}
 
 	xmlPts.popTag();
+	xmlPts.popTag();
 
 	// points.push_back(p);
+
+	mesh.setMode(OF_PRIMITIVE_POINTS);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+
+	ofBackground(0);
+
+	ofSetColor(255);
+	mesh.draw();
 
 }
 
