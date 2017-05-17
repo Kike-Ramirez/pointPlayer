@@ -23,63 +23,75 @@ void ofApp::setup(){
 		ofLogError("Position file did not load!");
 	}
 
+	camera.setTarget(ofVec3f(0, 0, 900));
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	mesh.clear();
+	puntos.clear();
+	colores.clear();
 
 	//for (int i = 0; i < numberOfSavedFrames; i++) {
 
 	int i = ofGetFrameNum();
-	cout << "Frame_" << i << endl;
 
 	xmlPts.pushTag("KinectPoints");
 
 	xmlPts.pushTag("newFrame", i);
 
 	numberOfSavedPoints = xmlPts.getNumTags("newPoint");
-
+	
 	for (int j = 0; j < numberOfSavedPoints; j++) {
 
-		xmlPts.pushTag("newPoint", j);
 
-		ofPoint p;
-		p.x = xmlPts.getValue("X", 0);
-		p.y = xmlPts.getValue("Y", 0);
-		p.z = xmlPts.getValue("Z", 0);
+		ofVec3f p;
+		p.x = xmlPts.getAttribute("newPoint", "x", 0.0, j);
+		p.y = xmlPts.getAttribute("newPoint", "y", 0.0, j);
+		p.z = xmlPts.getAttribute("newPoint", "z", 0.0, j);
 
-		mesh.addVertex(p);
+
+		puntos.push_back(p);
 
 		string colorPt;
-		colorPt = xmlPts.getValue("color", "000000");
 
-		ofColor colorVertex = ofColor(ofHexToInt(colorPt));
+		colorPt = xmlPts.getAttribute("newPoint", "color", "000000", j);
 		
-		mesh.addColor(colorVertex);
-
-		xmlPts.popTag();
+		ofColor colorVertex = ofColor(ofHexToInt(colorPt));
+		colores.push_back(colorVertex);
+		
 
 	}
 
+	
+
 	xmlPts.popTag();
 	xmlPts.popTag();
 
-	// points.push_back(p);
-
-	mesh.setMode(OF_PRIMITIVE_POINTS);
-
+	ofSetColor(255);
+	ofFill();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+	camera.begin();
+
 	ofBackground(0);
+	ofPushMatrix();
+	// ofRotateY(-ofGetFrameNum());
 
-	ofSetColor(255);
-	mesh.draw();
+	for (int i = 0; i < puntos.size(); i++)
+	{
+		ofSetColor(colores[i]);
+		ofFill();
+		ofDrawSphere(puntos[i], 1);
+	}
 
+	ofPopMatrix();
+
+	camera.end();
 }
 
 //--------------------------------------------------------------

@@ -28,7 +28,9 @@ class ofApp : public ofBaseApp{
 		ofPoint listPts[NUM_PTS];
 		int numberOfSavedFrames;
 		int numberOfSavedPoints;
-		ofMesh mesh;
+		vector<ofVec3f> puntos;
+		vector<ofColor> colores;
+		ofEasyCam camera;
 
 		
 };
