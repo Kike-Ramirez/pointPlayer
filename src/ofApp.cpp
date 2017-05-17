@@ -30,6 +30,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
+	mesh.clear();
+
 	puntos.clear();
 	colores.clear();
 
@@ -51,18 +53,23 @@ void ofApp::update(){
 		p.y = xmlPts.getAttribute("newPoint", "y", 0.0, j);
 		p.z = xmlPts.getAttribute("newPoint", "z", 0.0, j);
 
-
+		mesh.addVertex(p);
 		puntos.push_back(p);
-
-		string colorPt;
-
-		colorPt = xmlPts.getAttribute("newPoint", "color", "000000", j);
 		
-		ofColor colorVertex = ofColor(ofHexToInt(colorPt));
+		string colorStr =  "0x" + xmlPts.getAttribute("newPoint", "color", "000000", j);
+
+		unsigned char *colorHex = new unsigned char[colorStr.length() + 1];
+		strcpy((char *)colorHex, colorStr.c_str());
+
+		ofColor colorVertex = ofColor::fromHex(ofToInt(colorStr));
+
+		cout << j << ") " << colorStr << " -- " << colorVertex << endl;
+
 		colores.push_back(colorVertex);
-		
+		mesh.addColor(colorVertex);
 
 	}
+
 
 	
 
@@ -71,23 +78,32 @@ void ofApp::update(){
 
 	ofSetColor(255);
 	ofFill();
+
+	camera.setPosition(100, 0, 200);
+
+	mesh.setMode( OF_PRIMITIVE_POINTS );
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+	ofBackgroundGradient(ofColor(255), ofColor(0), OF_GRADIENT_LINEAR);
+
 	camera.begin();
 
-	ofBackground(0);
 	ofPushMatrix();
-	// ofRotateY(-ofGetFrameNum());
+	//ofRotateY(-ofGetFrameNum());
 
+	
 	for (int i = 0; i < puntos.size(); i++)
 	{
 		ofSetColor(colores[i]);
 		ofFill();
-		ofDrawSphere(puntos[i], 1);
+		ofDrawSphere(puntos[i], 3);
 	}
+	
+
+	// mesh.draw();
 
 	ofPopMatrix();
 
