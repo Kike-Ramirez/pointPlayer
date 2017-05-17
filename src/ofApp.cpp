@@ -58,10 +58,7 @@ void ofApp::update(){
 		
 		string colorStr =  "0x" + xmlPts.getAttribute("newPoint", "color", "000000", j);
 
-		unsigned char *colorHex = new unsigned char[colorStr.length() + 1];
-		strcpy((char *)colorHex, colorStr.c_str());
-
-		ofColor colorVertex = ofColor::fromHex(ofToInt(colorStr));
+		ofColor colorVertex = ofHexToInt(colorStr);
 
 		cout << j << ") " << colorStr << " -- " << colorVertex << endl;
 
